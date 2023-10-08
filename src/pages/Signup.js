@@ -53,7 +53,7 @@ const Signup=()=>{
   const handelSubmit=async (e)=>{
     e.preventDefault()
     if(!image) return alert("please upload image")
-    const url=await uploadImage(image)
+    await uploadImage(image)
    
 
   }
