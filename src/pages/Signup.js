@@ -65,7 +65,7 @@ const Signup=()=>{
             <Form onSubmit={handelSubmit}>
                 <h1 className='text-center'>Create Account</h1>
                 <div className='signup-profile-pic_container'>
-                  <img src={imagePreview||difProfile} className='profile-pic'/>
+                  <img src={imagePreview||difProfile} className='profile-pic' alt=''/>
                   <label htmlFor='image-upload' className='image-upload-label'>
                     <i className='fas fa-plus-circle add-picture-icon'>
 
