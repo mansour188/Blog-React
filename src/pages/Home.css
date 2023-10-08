@@ -1,0 +1,15 @@
+.home__bg{
+    background-image: url("../assets/abstract-digital-grid-black-background.jpg");
+    height: 92vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow-x: hidden;
+
+}
+
+.home-message-icon{
+    margin-left: 10px;
+    display:inline-block ;
+
+}

@@ -1,0 +1,33 @@
+.signup__bg{
+    background-image: url("../assets/signup.jpg");
+    height: 92vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow-x: hidden;
+
+}
+
+.signup-profile-pic_container{
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    position: relative;
+}
+.profile-pic{
+    width: 100px;
+    border-radius: 50%;
+    border: 2px solid gray;
+    object-fit: cover;
+    height: 100px;
+}
+
+.image-upload-label{
+    position: absolute;
+    bottom: 0;
+    right: 2px;
+    color: green;
+    background-color: white;
+    cursor: pointer;
+    z-index: 99;
+}
