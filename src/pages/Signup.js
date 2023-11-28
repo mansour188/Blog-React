@@ -3,7 +3,7 @@ import {Form,Button,Container,Col,Row}  from 'react-bootstrap'
 import './Signup.css'
 import { Link } from 'react-router-dom';
 import difProfile from '../assets/profile.jpg'
-
+import {useSignUpUserMutation} from "../services/app"
 
 const Signup=()=>{
 
@@ -13,6 +13,7 @@ const Signup=()=>{
   const [image,setImage]=useState(null)
   const [imagePreview,setImagePreview]=useState(null)
   const [uploadLoding,setUploadLoding]=useState(false)
+  const [signUpUser,{isLoading,error}]=useSignUpUserMutation()
 
   const validateImg=(e)=>{
     const file =e.target.files[0]
@@ -53,10 +54,16 @@ const Signup=()=>{
   const handelSubmit=async (e)=>{
     e.preventDefault()
     if(!image) return alert("please upload image")
-    await uploadImage(image)
+    const url= await uploadImage(image)
+    signUpUser({name,email,password,picture:url}).then(({data})=>{
+      if (data){
+        console.log(data)
+      }
+    })
    
 
   }
+
     return (
         <Container>
         <Row>
