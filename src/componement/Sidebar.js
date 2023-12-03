@@ -1,9 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
 import {ListGroup} from 'react-bootstrap'
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux'
 import { appContext } from '../context/appContext'
+import { addNotifications,resetNotifications } from '../features/userSlice'
 
 function Sidebar() {
+
+
+  const dispatch=useDispatch();
+
 
 
   const {socket,currentRoom,setCurrentRom,members,setMembers,messages,setMessages,privateMemeberMsg,setPrivateMemberMsg,rooms,setRooms,newMessages,setNewMessages}=useContext(appContext)
@@ -32,6 +37,39 @@ function Sidebar() {
       console.error("Error fetching rooms:", error);
     });
   }
+
+  const joinRoom=(room,isPublic=true)=>{
+    if(!user){
+      return alert('Please login first !')
+    }
+    socket.emit("join-room",room)
+    setCurrentRom(room)
+    if(isPublic){
+      setPrivateMemberMsg(null);
+    }
+
+    dispatch(resetNotifications(room))
+   
+    socket.off('notifications').on('notifications',(room)=>{
+      dispatch(addNotifications(room))
+    })
+  }
+
+  const orderIds=(id1,id2)=>{
+    if(id1>id2){
+      return id1+"-"+id2
+    }else{
+      return id2+"-"+id2
+    }
+
+  }
+
+  const hendelPrivateMemberMsg=(member)=>{
+    setPrivateMemberMsg(member)
+    const roomId=orderIds(user._id,member._id)
+    joinRoom(roomId,false)
+
+  }
  
  
  
@@ -42,10 +80,10 @@ function Sidebar() {
     <>
     <h3>Available Rooms</h3>
     <ListGroup>
-      {rooms.map((room)=>{
+      {rooms.map((room,idx)=>{
         return(
-          <ListGroup.Item >
-          {room}
+          <ListGroup.Item key={idx}  onClick={()=>joinRoom(room)} active={currentRoom==room} style={{cursor:'pointer',display:'flex',justifyContent:'space-between'}} >
+          {room} {currentRoom !==room && (<span className='badge rounded-pill bg-primary'>{user.newMessage[room]}</span>)}
         </ListGroup.Item>
         )
       })}
@@ -56,7 +94,7 @@ function Sidebar() {
    <ListGroup>
    {members.map((member)=>{
      return(
-      <ListGroup.Item key={member.id} style={{cursor:'pointer'}}>
+      <ListGroup.Item key={member.id} style={{cursor:'pointer'}} active={privateMemeberMsg?._id==member?._id} onClick={()=>hendelPrivateMemberMsg(member)} disabled={member._id===user._id}>
       {member.name}
 
       </ListGroup.Item>

@@ -1,14 +1,16 @@
 import React, { useContext, useState } from 'react'
 import { Button, FormControl, FormGroup,Row,Col } from 'react-bootstrap'
 import './MessageForm.css'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { appContext } from '../context/appContext'
 import { Socket } from 'socket.io-client'
+import { addNotifications,resetNotifications } from '../features/userSlice'
 
 
 function MessageForm() {
   const {socket,currentRoom,setCurrentRom,members,setMembers,messages,setMessages,privateMemeberMsg,setPrivateMemberMsg,rooms,setRooms,newMessages,setNewMessages}=useContext(appContext)
   const user=useSelector(state=>state.user);
+  const dispatch=useDispatch();
   const [message,setMessage]=useState("")
   function getFormatteDate(){
     const date=new Date()
@@ -42,6 +44,17 @@ return(
  <>
  <div className='message-output'>
   {!user && (<div className='alert alert-danger'>please login</div>)}
+
+  {user && messages.map(({_id:date,messagesByDate},idx) =>(
+    <div key={idx}>
+      <p className='alert alert-info text-center message-date-indicator'>{date}</p>
+      {messagesByDate?.map(({content,time,from:sender},msgIdx)=>(
+           <div className='message' key={msgIdx}>
+            {content}
+           </div>
+      ))}
+    </div>
+  ) ) }
 
  </div>
  <form onSubmit={handelSubmit}>

@@ -34,7 +34,9 @@ const Navigation=()=>{
 
             )}
 
-            <LinkContainer to="/chat"><Nav.Link >chat</Nav.Link></LinkContainer>
+            {user && (
+              <LinkContainer to="/chat"><Nav.Link >chat</Nav.Link></LinkContainer>
+            )}
 
             
             

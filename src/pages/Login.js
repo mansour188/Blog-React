@@ -19,7 +19,11 @@ const Login=()=>{
       if(data.data){
         socket.emit('new-user')
         navigate("/chat")
+      }else{
+        alert("credential incorrect  please try again!")
       }
+      
+
 
     }
      
