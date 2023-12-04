@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {ListGroup} from 'react-bootstrap'
+import {ListGroup, Row,Col} from 'react-bootstrap'
 import { useSelector,useDispatch } from 'react-redux'
 import { appContext } from '../context/appContext'
 import { addNotifications,resetNotifications } from '../features/userSlice'
+import './Sidebar.css'
 
 function Sidebar() {
 
@@ -47,19 +48,23 @@ function Sidebar() {
     if(isPublic){
       setPrivateMemberMsg(null);
     }
-
+    console.log(isPublic)
     dispatch(resetNotifications(room))
    
-    socket.off('notifications').on('notifications',(room)=>{
-      dispatch(addNotifications(room))
-    })
+   
   }
+  socket.off('notifications').on('notifications',(room)=>{
+    if(currentRoom!==room){
+      dispatch(addNotifications(room))
+    }
+  })
 
   const orderIds=(id1,id2)=>{
+    
     if(id1>id2){
       return id1+"-"+id2
     }else{
-      return id2+"-"+id2
+      return id2+"-"+id1
     }
 
   }
@@ -79,7 +84,7 @@ function Sidebar() {
  return (
     <>
     <h3>Available Rooms</h3>
-    <ListGroup>
+    <ListGroup className='rooms'>
       {rooms.map((room,idx)=>{
         return(
           <ListGroup.Item key={idx}  onClick={()=>joinRoom(room)} active={currentRoom==room} style={{cursor:'pointer',display:'flex',justifyContent:'space-between'}} >
@@ -91,11 +96,24 @@ function Sidebar() {
     </ListGroup>
     <h2>Memebers</h2>
 
-   <ListGroup>
+   <ListGroup className='members'>
    {members.map((member)=>{
      return(
       <ListGroup.Item key={member.id} style={{cursor:'pointer'}} active={privateMemeberMsg?._id==member?._id} onClick={()=>hendelPrivateMemberMsg(member)} disabled={member._id===user._id}>
-      {member.name}
+      <Row>
+        <Col xs={2} className="member-status">
+          <img src={member.picture} className='member-status-img'/>
+          {member.status=="online" ? <i className='fas fa-circle sidebar-online-status'></i>:<i className='fas fa-circle sidebar-offline-status'></i>}
+        </Col>
+        <Col xs={9}>
+          {member.name}
+          {member._id===user?._id &&  " (You)" }
+          {member.status === "offline" && (" Offline")} 
+        </Col>
+        <Col className='badge rounded-pill bg-primary'>
+          {user.newMessage[orderIds(member._id,user._id)]}
+        </Col>
+      </Row>
 
       </ListGroup.Item>
      )
